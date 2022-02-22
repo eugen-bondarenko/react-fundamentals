@@ -2,7 +2,7 @@
 // http://localhost:3000/isolated/exercise/06.js
 
 import * as React from 'react'
-import {useRef} from 'react'
+import {useRef, useState} from 'react'
 
 function UsernameForm({onSubmitUsername}) {
 
@@ -28,13 +28,23 @@ function UsernameForm({onSubmitUsername}) {
 
   // 🐨 make sure to associate the label to the input.
   // to do so, set the value of 'htmlFor' prop of the label to the id of input
+
+  const [error, setError] = useState('')
+  const handleChange = (e) => {
+    e.preventDefault()
+    const value = e.target.value
+    const isValid = value === value.toLowerCase()
+    setError(isValid ? '' : 'Username must be lower case')
+  }
+
   return (
     <form onSubmit={handleSubmit}>
       <div>
         <label htmlFor='userNameInput'>Username:</label>
-        <input type="text" id='userNameInput' ref={inputRef} />
+        <input type="text" id='userNameInput' ref={inputRef} onChange={handleChange}/>
       </div>
-      <button type="submit">Submit</button>
+      {error && <div role='alert' style={{color: 'red'}}>{error}</div>}
+      <button type="submit" disabled={Boolean(error)}>Submit</button>
     </form>
   )
 }
